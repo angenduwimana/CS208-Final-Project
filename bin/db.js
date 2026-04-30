@@ -1,49 +1,47 @@
 // db.js
-const mysql = require('mysql2'); // Or your chosen database driver
+const mysql = require('mysql2');
 
-let connection = null; // This variable is 'closed over'
+let connection = null;
 
 function createDbConnection() {
-    if (!connection) {
-        connection = mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: '12345',
-            database: 'cs208demo'
-        });
+  if (!connection) {
+    connection = mysql.createConnection({
+      host: '127.0.0.1',
+      user: 'root',
+      password: '12345',
+      database: 'cs208demo'
+    });
 
-        connection.connect(err => {
-            if (err) {
-                console.error('Error connecting to database:', err);
-                // Handle error appropriately, e.g., exit process
-            } else {
-                console.log('Database connected!');
-            }
-        });
-    }
-    console.log('Using existing database connection');
-    return connection;
+    connection.connect((err) => {
+      if (err) {
+        console.error('Database connection error:', err.message);
+      } else {
+        console.log('Database connected!');
+      }
+    });
+  }
+
+  return connection;
 }
 
-// Middleware to attach the connection to the request object
 function dbMiddleware(req, res, next) {
-    req.db = createDbConnection();
-    console.log(`DB middleware id: ${req.db.threadId}, called at: ${Date.now()}`);
-    next();
+  req.db = createDbConnection();
+  next();
 }
 
-// Function to close the connection (for graceful shutdown)
 function closeDbConnection() {
-    if (connection) {
-        connection.end(err => {
-            if (err) {
-                console.error('Error closing database connection:', err);
-            } else {
-                console.log('Database connection closed.');
-                connection = null; // Reset connection
-            }
-        });
+  if (!connection) return;
+
+  connection.end((err) => {
+    if (err) {
+      console.error('Error closing database connection:', err.message);
     }
+    connection = null;
+  });
 }
 
-module.exports = { dbMiddleware, createDbConnection, closeDbConnection };
+module.exports = {
+  dbMiddleware,
+  createDbConnection,
+  closeDbConnection
+};
