@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
+
 const indexRouter = require('./routes/index');
+const commentsRouter = require('./routes/comments');
 const { dbMiddleware } = require('./bin/db');
 
 const app = express();
@@ -14,9 +16,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(dbMiddleware);
 
 app.use('/', indexRouter);
+app.use('/', commentsRouter);
 
 app.use(function (req, res) {
-  res.status(404).render('error', { message: 'Page not found', error: {} });
+  res.status(404).render('error', {
+    title: 'Error | Downtown Donuts',
+    message: 'Page not found'
+  });
 });
 
 module.exports = app;

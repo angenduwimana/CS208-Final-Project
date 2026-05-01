@@ -46,6 +46,15 @@ body {
   font-weight: 700;
 }
 
+.site-nav a:focus,
+.button:focus,
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 3px solid #8cc8ff;
+  outline-offset: 2px;
+}
+
 .site-main {
   max-width: 900px;
   margin: 0 auto;

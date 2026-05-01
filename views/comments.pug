@@ -9,10 +9,10 @@ block content
 
     form(action="/comments" method="POST")
       label(for="name") Name
-      input#name(type="text" name="name" maxlength="50" required)
+      input#name(type="text" name="name" maxlength="50" required value=(typeof formData !== 'undefined' ? formData.name : ''))
 
       label(for="comment") Comment
-      textarea#comment(name="comment" rows="5" maxlength="500" required)
+      textarea#comment(name="comment" rows="5" maxlength="500" required)= typeof formData !== 'undefined' ? formData.comment : ''
 
       button(type="submit") Submit Comment
 
@@ -22,7 +22,7 @@ block content
           article.comment-card
             h3= comment.name
             p= comment.comment
-            small= comment.created_at
+            small= new Date(comment.created_at).toLocaleString()
     else
       p No comments yet.
 
